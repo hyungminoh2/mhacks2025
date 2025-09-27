@@ -2,75 +2,38 @@
 
 import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon, PaperAirplaneIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
-
-interface Message {
-  id: number
-  text: string
-  isUser: boolean
-  timestamp: Date
-}
+import { Bars3Icon, XMarkIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
 
 export default function HeroSection() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false) // State for the sign-up modal
   const [email, setEmail] = useState('') // State for the email input
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: "Hi! I'm here to help you with cryptocurrency calculations. What would you like to know?",
-      isUser: false,
-      timestamp: new Date()
-    }
-  ])
-  const [inputMessage, setInputMessage] = useState('')
 
-  const scrollToChat = () => {
-    document.getElementById('chat-section')?.scrollIntoView({
-      behavior: 'smooth'
-    })
-  }
+  const handleEmailSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-  const sendMessage = () => {
-    if (!inputMessage.trim()) return
+    try {
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
 
-    const newMessage: Message = {
-      id: messages.length + 1,
-      text: inputMessage,
-      isUser: true,
-      timestamp: new Date()
-    }
-
-    setMessages(prev => [...prev, newMessage])
-    setInputMessage('')
-
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: messages.length + 2,
-        text: "Thanks for your message! I'm processing your crypto query...",
-        isUser: false,
-        timestamp: new Date()
+      if (res.ok) {
+        alert(`✅ Confirmation email sent to ${email}!`);
+      } else {
+        const { error } = await res.json();
+        alert(`❌ Failed to send email: ${error}`);
       }
-      setMessages(prev => [...prev, botResponse])
-    }, 1000)
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      sendMessage()
+    } catch (err) {
+      console.error(err);
+      alert('❌ Something went wrong.');
     }
-  }
-  
-  const handleEmailSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    // Here you would handle the email submission, e.g., send to an API
-    console.log('Email submitted:', email)
-    alert(`Thank you for subscribing with ${email}!`)
-    setEmail('') // Clear the input
-    setIsSignUpModalOpen(false) // Close the modal
-  }
 
+    setEmail('');
+    setIsSignUpModalOpen(false);
+  };
 
   return (
     <div className="bg-gray-900">
@@ -78,7 +41,7 @@ export default function HeroSection() {
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
             <a href="/" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+              <span className="sr-only">Solvend</span>
               <img
                 alt="Company Logo"
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
@@ -100,9 +63,11 @@ export default function HeroSection() {
           </div>
 
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <button onClick={scrollToChat} className="text-sm/6 font-semibold text-white">
-              Try Chatting <span aria-hidden="true">&rarr;</span>
-            </button>
+            <Link href="/chat">
+              <button className="text-sm/6 font-semibold text-white">
+                Try Chatting <span aria-hidden="true">&rarr;</span>
+              </button>
+            </Link>
           </div>
         </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -110,7 +75,7 @@ export default function HeroSection() {
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
               <a href="/" className="-m-1.5 p-1.5">
-                <span className="sr-only">Your Company</span>
+                <span className="sr-only">Solvend</span>
                 <img
                   alt="Company Logo"
                   src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
@@ -136,11 +101,11 @@ export default function HeroSection() {
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      scrollToChat();
+                      setIsSignUpModalOpen(true);
                     }}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5"
                   >
-                    Try Chatting
+                    Get Started
                   </button>
                 </div>
               </div>
@@ -197,100 +162,46 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <div id="chat-section" className="bg-gray-800 py-16 px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-semibold text-white mb-4">Start Chatting About Crypto</h2>
-            <p className="text-gray-400">Ask me anything about cryptocurrency calculations, prices, or trends!</p>
-          </div>
-
-          <div className="bg-gray-900 rounded-lg shadow-xl overflow-hidden">
-            <div className="h-96 overflow-y-auto p-6 space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${message.isUser
-                      ? 'bg-indigo-500 text-white'
-                      : 'bg-gray-700 text-gray-100'
-                      }`}
-                  >
-                    <p className="text-sm">{message.text}</p>
-                    <p className="text-xs opacity-70 mt-1">
-                      {message.timestamp.toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="border-t border-gray-700 p-4">
-              <div className="flex space-x-3">
-                <input
-                  type="text"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Ask about crypto prices, calculations, or trends..."
-                  className="flex-1 bg-gray-800 text-white placeholder-gray-400 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                />
-                <button
-                  onClick={sendMessage}
-                  className="bg-indigo-500 hover:bg-indigo-400 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                >
-                  <PaperAirplaneIcon className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <Dialog open={isSignUpModalOpen} onClose={() => setIsSignUpModalOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-        
+
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel className="max-w-sm w-full space-y-4 rounded-2xl bg-gray-800 p-8 shadow-2xl">
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-500/20 mb-4">
-                  <EnvelopeIcon className="h-6 w-6 text-indigo-400" aria-hidden="true" />
+                <EnvelopeIcon className="h-6 w-6 text-indigo-400" aria-hidden="true" />
               </div>
               <h3 className="text-lg leading-6 font-bold text-white">Subscribe for Updates</h3>
               <p className="mt-2 text-sm text-gray-400">
-                  Enter your email to get personalized crypto insights.
+                Enter your email to get personalized crypto insights.
               </p>
             </div>
             <form onSubmit={handleEmailSubmit} className="mt-6">
-                <div>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="you@example.com"
-                        required
-                    />
-                </div>
-                <div className="mt-6 flex gap-x-4">
-                    <button
-                        type="button"
-                        onClick={() => setIsSignUpModalOpen(false)}
-                        className="flex-1 rounded-md bg-gray-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        className="flex-1 rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400"
-                    >
-                        Subscribe
-                    </button>
-                </div>
+              <div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <div className="mt-6 flex gap-x-4">
+                <button
+                  type="button"
+                  onClick={() => setIsSignUpModalOpen(false)}
+                  className="flex-1 rounded-md bg-gray-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400"
+                >
+                  Subscribe
+                </button>
+              </div>
             </form>
           </DialogPanel>
         </div>
@@ -298,4 +209,3 @@ export default function HeroSection() {
     </div>
   )
 }
-
