@@ -2,14 +2,7 @@
 
 import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
-import Image from 'next/image'
-
-interface NavigationItem {
-  name: string
-  href: string
-}
+import { Bars3Icon, XMarkIcon, PaperAirplaneIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
 
 interface Message {
   id: number
@@ -18,15 +11,10 @@ interface Message {
   timestamp: Date
 }
 
-const navigation: NavigationItem[] = [
-  { name: 'Product', href: '/product' },
-  { name: 'Features', href: '/features' },
-  { name: 'Marketplace', href: '/marketplace' },
-  { name: 'Company', href: '/company' },
-]
-
 export default function HeroSection() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false) // State for the sign-up modal
+  const [email, setEmail] = useState('') // State for the email input
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -73,22 +61,32 @@ export default function HeroSection() {
       sendMessage()
     }
   }
+  
+  const handleEmailSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    // Here you would handle the email submission, e.g., send to an API
+    console.log('Email submitted:', email)
+    alert(`Thank you for subscribing with ${email}!`)
+    setEmail('') // Clear the input
+    setIsSignUpModalOpen(false) // Close the modal
+  }
+
 
   return (
     <div className="bg-gray-900">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <a href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <Image
+              <img
                 alt="Company Logo"
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
                 width={32}
                 height={32}
                 className="h-8 w-auto"
               />
-            </Link>
+            </a>
           </div>
           <div className="flex lg:hidden">
             <button
@@ -111,16 +109,16 @@ export default function HeroSection() {
           <div className="fixed inset-0 z-50" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
-              <Link href="/" className="-m-1.5 p-1.5">
+              <a href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                <Image
+                <img
                   alt="Company Logo"
                   src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
                   width={32}
                   height={32}
                   className="h-8 w-auto"
                 />
-              </Link>
+              </a>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
@@ -136,7 +134,10 @@ export default function HeroSection() {
                 </div>
                 <div className="py-6">
                   <button
-                    onClick={scrollToChat}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      scrollToChat();
+                    }}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5"
                   >
                     Try Chatting
@@ -173,12 +174,12 @@ export default function HeroSection() {
               Get AI-processed cryptocurrency updates, personalized just for you, delivered straight to your inbox
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                href="/get-started"
+              <button
+                onClick={() => setIsSignUpModalOpen(true)}
                 className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
                 Sign up!
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -196,7 +197,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Chat Section */}
       <div id="chat-section" className="bg-gray-800 py-16 px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="text-center mb-8">
@@ -205,7 +205,6 @@ export default function HeroSection() {
           </div>
 
           <div className="bg-gray-900 rounded-lg shadow-xl overflow-hidden">
-            {/* Chat Messages */}
             <div className="h-96 overflow-y-auto p-6 space-y-4">
               {messages.map((message) => (
                 <div
@@ -230,7 +229,6 @@ export default function HeroSection() {
               ))}
             </div>
 
-            {/* Chat Input */}
             <div className="border-t border-gray-700 p-4">
               <div className="flex space-x-3">
                 <input
@@ -252,6 +250,52 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      <Dialog open={isSignUpModalOpen} onClose={() => setIsSignUpModalOpen(false)} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="max-w-sm w-full space-y-4 rounded-2xl bg-gray-800 p-8 shadow-2xl">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-500/20 mb-4">
+                  <EnvelopeIcon className="h-6 w-6 text-indigo-400" aria-hidden="true" />
+              </div>
+              <h3 className="text-lg leading-6 font-bold text-white">Subscribe for Updates</h3>
+              <p className="mt-2 text-sm text-gray-400">
+                  Enter your email to get personalized crypto insights.
+              </p>
+            </div>
+            <form onSubmit={handleEmailSubmit} className="mt-6">
+                <div>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="you@example.com"
+                        required
+                    />
+                </div>
+                <div className="mt-6 flex gap-x-4">
+                    <button
+                        type="button"
+                        onClick={() => setIsSignUpModalOpen(false)}
+                        className="flex-1 rounded-md bg-gray-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="flex-1 rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400"
+                    >
+                        Subscribe
+                    </button>
+                </div>
+            </form>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </div>
   )
 }
+
