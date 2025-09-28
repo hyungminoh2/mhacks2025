@@ -41,7 +41,7 @@ export async function POST(req) {
     try {
       // Call the Python script with --filename argument
       await new Promise((resolve, reject) => {
-        exec(`python generate.py.py --filename ${filename} --items JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN 0x514910771af9ca656af840dff83e8264ecf986ca`, (error, stdout, stderr) => {
+        exec(`python generate.py.py --filename ${filename} --items JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN So11111111111111111111111111111111111111112`, (error, stdout, stderr) => {
           if (error) {
             reject(error);
           } else {
@@ -60,7 +60,7 @@ export async function POST(req) {
       await mg.messages.create(domain, {
         from: fromEmail,
         to: [email],
-        subject: "📈 Your Daily Crypto Update from Solvend!",
+        subject: "Your Daily Crypto Update from Solvend!",
         html: htmlContent,
       });
 
