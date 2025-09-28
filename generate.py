@@ -273,7 +273,7 @@ Here are a few prices and the charts you must include in the response:
         model="gemini-2.5-flash",
         contents=system_prompt,
     )
-    with open(f"{filename}.html", "w") as f:
+    with open(f"{filename}", "w") as f:
         f.write(response.text)
 
 
