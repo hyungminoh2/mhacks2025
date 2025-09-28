@@ -181,8 +181,8 @@ async def runV(id):
 
 async def mainAI(ids, filename):
     prices = await runJ(ids)
-    chart = await runV(ids[0])
-
+    with open("app/public/chart.html", "w") as chart:
+        chart.write(str(await runV(ids[0])))
     system_prompt = """
     You are a modern built tool for efficiency and saving people time within the financial market. Your task is to generate a professional HTML-formatted email summarizing the current prices and trends of the specific cryptocurrencies provided. Follow these instructions:
 
@@ -238,8 +238,6 @@ async def mainAI(ids, filename):
         <th>Trend</th>
       </tr>
 
-      [Chart Rendering Included Here]
-
       <tr>
         <td>A</td>
         <td>$XX,XXX.XX</td>
@@ -259,16 +257,17 @@ async def mainAI(ids, filename):
       <!-- Additional coins here -->
     </table>
 
+    (Embed a url to the chart here: http://localhost:3000/chart.html)
+
     <p>Overall, the market shows a [general trend] today, with [brief commentary].</p>
 
     <p>Solvend, 2025</p>
   </body>
 </html>
 
-Here are a few prices and the charts you must include in the response:
+Here are a few prices you must include in the response:
 """
     system_prompt += str(prices)
-    system_prompt += str(chart)
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=system_prompt,
