@@ -19,6 +19,10 @@ parser.add_argument(
     type=str,
     help="A list of ids"
 )
+parser.add_argument(
+    "--filename",
+    type=str,
+)
 
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
@@ -33,7 +37,7 @@ async def runJ(id_list):
     # Remove debug prints
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
-            prompt = f"Find the prices of the tokens with ids {id_list}"
+            prompt = f"Find the prices of the tokens with ids {id_list} using the tool call given"
             await session.initialize()
             # Remove debug prints
 
@@ -58,7 +62,7 @@ async def runJ(id_list):
             # Remove debug prints
 
             response = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash-lite",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0,
@@ -121,7 +125,7 @@ async def runV(id):
 
             # 1️⃣ Generate initial response
             response = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash-lite",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     temperature=0,
@@ -175,22 +179,18 @@ async def runV(id):
                 return "No final response generated."
 
 
-async def mainAI(ids):
+async def mainAI(ids, filename):
     prices = await runJ(ids)
     chart = await runV(ids[0])
 
     system_prompt = """
-    You are a financial analyst assistant. Your task is to generate a professional HTML-formatted email summarizing the current prices and trends of the specific cryptocurrencies provided. Follow these instructions:
+    You are a modern built tool for efficiency and saving people time within the financial market. Your task is to generate a professional HTML-formatted email summarizing the current prices and trends of the specific cryptocurrencies provided. Follow these instructions:
 
     Format:
 
     The output must be a fully written HTML email, including:
 
     <html>, <head>, <body> tags
-
-    Subject line (as plain text at the top, outside <body> if needed)
-
-    Greeting
 
     A TL;DR one-sentence summary at the top of the body
 
@@ -261,22 +261,22 @@ async def mainAI(ids):
 
     <p>Overall, the market shows a [general trend] today, with [brief commentary].</p>
 
-    <p>Best regards,<br>[Your Name]</p>
+    <p>Solvend, 2025</p>
   </body>
 </html>
 
 Here are a few prices and the charts you must include in the response:
-"""      
+"""
     system_prompt += str(prices)
     system_prompt += str(chart)
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=system_prompt,
     )
-    with open("file.txt", "w") as f:
+    with open(f"{filename}.html", "w") as f:
         f.write(response.text)
 
 
 # Revert main block
 args = parser.parse_args()
-asyncio.run(mainAI(args.items))
+asyncio.run(mainAI(args.items, args.filename))
