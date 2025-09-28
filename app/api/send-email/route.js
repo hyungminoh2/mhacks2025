@@ -3,7 +3,6 @@ import Mailgun from "mailgun.js";
 import cron from "node-cron";
 import { exec } from "child_process";
 import fs from "fs/promises";
-import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req) {
   try {
@@ -37,11 +36,11 @@ export async function POST(req) {
 
     // Function to send crypto update email
     const sendCryptoEmail = async () => {
-    const filename = `crypto_update_${uuidv4()}.html`;
+    const filename = `crypto_update.html`;
     try {
       // Call the Python script with --filename argument
       await new Promise((resolve, reject) => {
-        exec(`python generate.py.py --filename ${filename} --items JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN So11111111111111111111111111111111111111112`, (error, stdout, stderr) => {
+        exec(`python generate.py --filename ${filename} --items JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN So11111111111111111111111111111111111111112`, (error, stdout, stderr) => {
           if (error) {
             reject(error);
           } else {
