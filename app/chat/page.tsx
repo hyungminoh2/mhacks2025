@@ -23,47 +23,77 @@ export default function ChatPage() {
   const [inputMessage, setInputMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
 
-  const sendMessage = () => {
+  const sendMessageToAPI = async (question: string) => {
+    try {
+      const response = await fetch('http://localhost:4000/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      return data.message
+    } catch (error) {
+      console.error('Error calling API:', error)
+      return "Sorry, I'm having trouble connecting to the server right now. Please try again later."
+    }
+  }
+
+  const sendMessage = async () => {
     if (!inputMessage.trim()) return
 
-    const newMessage: Message = {
-      id: messages.length + 1,
+    const userMessage: Message = {
+      id: Date.now(), // Use timestamp for unique ID
       text: inputMessage,
       isUser: true,
       timestamp: new Date()
     }
 
-    setMessages(prev => [...prev, newMessage])
+    setMessages(prev => [...prev, userMessage])
+    const currentQuestion = inputMessage
     setInputMessage('')
     setIsTyping(true)
 
-    // Simulate bot response with more realistic responses
-    setTimeout(() => {
-      const responses = [
-        "I can help you calculate your crypto portfolio value. What coins are you holding?",
-        "Bitcoin is currently showing strong support levels. Would you like me to analyze the current market trends?",
-        "For crypto calculations, I can help with profit/loss, DCA strategies, or portfolio diversification. What interests you most?",
-        "That's a great question! Let me process the current market data for you...",
-        "I'm analyzing the latest cryptocurrency data. What specific calculation would you like me to help with?"
-      ]
-
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
+    try {
+      // Call your Flask API
+      const aiResponse = await sendMessageToAPI(currentQuestion)
 
       const botResponse: Message = {
-        id: messages.length + 2,
-        text: randomResponse,
+        id: Date.now() + 1,
+        text: aiResponse,
         isUser: false,
         timestamp: new Date()
       }
+
       setMessages(prev => [...prev, botResponse])
+    } catch (error) {
+      // Fallback error message
+      const errorResponse: Message = {
+        id: Date.now() + 1,
+        text: "I apologize, but I'm experiencing technical difficulties. Please try again in a moment.",
+        isUser: false,
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorResponse])
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       sendMessage()
     }
+  }
+
+  const handleQuickAction = (message: string) => {
+    setInputMessage(message)
   }
 
   return (
@@ -107,7 +137,7 @@ export default function ChatPage() {
                     : 'bg-gray-700 text-gray-100'
                   }`}
               >
-                <p className="text-sm">{message.text}</p>
+                <p className="text-sm whitespace-pre-wrap">{message.text}</p>
                 <p className="text-xs opacity-70 mt-1">
                   {message.timestamp.toLocaleTimeString([], {
                     hour: '2-digit',
@@ -144,10 +174,11 @@ export default function ChatPage() {
               onKeyPress={handleKeyPress}
               placeholder="Ask about crypto prices, calculations, portfolio analysis..."
               className="flex-1 bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              disabled={isTyping}
             />
             <button
               onClick={sendMessage}
-              disabled={!inputMessage.trim()}
+              disabled={!inputMessage.trim() || isTyping}
               className="bg-indigo-500 hover:bg-indigo-400 disabled:bg-gray-600 disabled:cursor-not-allowed text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors"
             >
               <PaperAirplaneIcon className="h-5 w-5" />
@@ -157,26 +188,30 @@ export default function ChatPage() {
           {/* Quick Actions */}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
-              onClick={() => setInputMessage("Calculate my portfolio value")}
+              onClick={() => handleQuickAction("Calculate my portfolio value")}
               className="px-3 py-1 text-xs bg-gray-700 text-gray-300 rounded-full hover:bg-gray-600 transition-colors"
+              disabled={isTyping}
             >
               Portfolio Value
             </button>
             <button
-              onClick={() => setInputMessage("What's the current Bitcoin price?")}
+              onClick={() => handleQuickAction("What's the current Bitcoin price?")}
               className="px-3 py-1 text-xs bg-gray-700 text-gray-300 rounded-full hover:bg-gray-600 transition-colors"
+              disabled={isTyping}
             >
               Bitcoin Price
             </button>
             <button
-              onClick={() => setInputMessage("Help me with DCA strategy")}
+              onClick={() => handleQuickAction("Help me with DCA strategy")}
               className="px-3 py-1 text-xs bg-gray-700 text-gray-300 rounded-full hover:bg-gray-600 transition-colors"
+              disabled={isTyping}
             >
               DCA Strategy
             </button>
             <button
-              onClick={() => setInputMessage("Analyze market trends")}
+              onClick={() => handleQuickAction("Analyze market trends")}
               className="px-3 py-1 text-xs bg-gray-700 text-gray-300 rounded-full hover:bg-gray-600 transition-colors"
+              disabled={isTyping}
             >
               Market Analysis
             </button>
