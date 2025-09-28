@@ -3,8 +3,11 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Your Company Name',
-  description: 'Data to enrich your online business',
+  icons: {
+    icon: '/IMAGE.png',
+  },
+  title: 'Solvend',
+  description: 'Crypto AI Agent Email Subscription Model',
 }
 
 export default function RootLayout({

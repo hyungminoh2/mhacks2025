@@ -43,11 +43,11 @@ export default function HeroSection() {
             <a href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Solvend</span>
               <img
-                alt="Company Logo"
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                alt="Solvend Logo"
+                src="/MHACK.png"
                 width={32}
                 height={32}
-                className="h-8 w-auto"
+                className="h-20 w-auto"
               />
             </a>
           </div>
@@ -62,27 +62,31 @@ export default function HeroSection() {
             </button>
           </div>
 
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link href="/chat">
-              <button className="text-sm/6 font-semibold text-white">
-                Try Chatting <span aria-hidden="true">&rarr;</span>
-              </button>
-            </Link>
-          </div>
-        </nav>
+<div className="hidden lg:flex lg:flex-1 lg:justify-end">
+  <div className="relative">
+    <div className="border border-white/30 w-36 h-12 flex items-center justify-center relative overflow-hidden">
+      <Link href="/chat">
+        <button className="text-sm/6 font-semibold text-white hover:text-gray-200 transition-colors duration-200">
+          Try Chatting <span aria-hidden="true">&rarr;</span>
+        </button>
+      </Link>
+    </div>
+  </div>
+</div>
+       </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
           <div className="fixed inset-0 z-50" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
               <a href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">Solvend</span>
-                <img
-                  alt="Company Logo"
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                  width={32}
-                  height={32}
-                  className="h-8 w-auto"
-                />
+                             <img
+                alt="Solvend Logo"
+                src="/MHACK.png"
+                width={32}
+                height={32}
+                className="h-20 w-auto"
+              />
               </a>
               <button
                 type="button"
@@ -140,13 +144,12 @@ export default function HeroSection() {
               Get AI-processed cryptocurrency updates, personalized just for you, delivered straight to your inbox
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <button
-                onClick={() => setIsSignUpModalOpen(true)}
-                className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              >
-                Sign up!
-              </button>
-            </div>
+<button
+  onClick={() => setIsSignUpModalOpen(true)}
+  className="rounded-lg bg-indigo-500 px-10 py-5 text-xl font-bold text-white shadow-lg hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 transition-colors duration-200"
+>
+  Sign up!
+</button>            </div>
           </div>
         </div>
 
