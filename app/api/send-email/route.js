@@ -1,7 +1,9 @@
 import FormData from "form-data";
 import Mailgun from "mailgun.js";
 import cron from "node-cron";
-import axios from "axios";
+import { exec } from "child_process";
+import fs from "fs/promises";
+import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req) {
   try {
@@ -27,7 +29,7 @@ export async function POST(req) {
       to: [email],
       subject: "🚀 Welcome to Solvend!",
       text: "Thanks for signing up! You'll now receive AI-powered cryptocurrency updates every week!",
-      html: `<h1>Welcome to Solvend – Mhacks 2025!</h1>
+      html: `<h1>Welcome to Solvend!</h1>
              <p>Hi there,</p>
              <p>Thanks for signing up! You’ll now receive AI-processed cryptocurrency updates, tailored just for you, delivered straight to your inbox.</p>
              <p>— The Solvend Team</p>`,
@@ -35,44 +37,38 @@ export async function POST(req) {
 
     // Function to send crypto update email
     const sendCryptoEmail = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.coingecko.com/api/v3/coins/markets",
-          {
-            params: {
-              vs_currency: "usd",
-              order: "market_cap_desc",
-              per_page: 5,
-              page: 1,
-              price_change_percentage: "7d",
-            },
+    const filename = `crypto_update_${uuidv4()}.html`;
+    try {
+      // Call the Python script with --filename argument
+      await new Promise((resolve, reject) => {
+        exec(`python generate.py.py --filename ${filename} --items JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN 0x514910771af9ca656af840dff83e8264ecf986ca`, (error, stdout, stderr) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(stdout);
           }
-        );
-
-        const topCoins = response.data
-          .map(
-            (coin) =>
-              `${coin.name} (${coin.symbol.toUpperCase()}): $${
-                coin.current_price
-              } (7d change: ${coin.price_change_percentage_7d_in_currency.toFixed(
-                2
-              )}%)`
-          )
-          .join("<br>");
-
-        await mg.messages.create(domain, {
-          from: fromEmail,
-          to: [email],
-          subject: "📈 Your Weekly Crypto Update from Solvend!",
-          text: topCoins.replace(/<br>/g, "\n"),
-          html: `<h1>Weekly Crypto Update</h1><p>${topCoins}</p>`,
         });
+      });
 
-        console.log(`✅ Crypto email sent to ${email}`);
-      } catch (err) {
-        console.error(`Error sending crypto email to ${email}:`, err);
-      }
-    };
+      // Wait 3 seconds to ensure the file is fully written
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+ 
+      // Read the file contents
+      const htmlContent = await fs.readFile(filename, "utf-8");
+
+      // Send the email with file contents as HTML
+      await mg.messages.create(domain, {
+        from: fromEmail,
+        to: [email],
+        subject: "📈 Your Daily Crypto Update from Solvend!",
+        html: htmlContent,
+      });
+
+      console.log(`✅ Crypto email sent to ${email}`);
+    } catch (err) {
+      console.error(`Error sending crypto email to ${email}:`, err);
+    }
+  };
 
     // 2) Send first crypto email immediately
     await sendCryptoEmail();
