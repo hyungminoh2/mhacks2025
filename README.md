@@ -8,7 +8,7 @@ npm install
 # or
 yarn install
 
-Create and activate a Python virtual environment:
+Create and activate a Python virtual environment for both servers:
 python3 -m venv venv
 source venv/bin/activate   # macOS/Linux (bash/zsh)
 # OR
@@ -24,6 +24,9 @@ yarn dev
 pnpm dev
 # or
 bun dev
+
+Run Flask server
+python app2.py
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
