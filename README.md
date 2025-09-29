@@ -2,7 +2,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+```bash
+First, install the npm packages:
+npm install
+# or
+yarn install
+
+Create and activate a Python virtual environment:
+python3 -m venv venv
+source venv/bin/activate   # macOS/Linux (bash/zsh)
+# OR
+.\venv\Scripts\activate    # Windows PowerShell
+
+Run the development server:
 
 ```bash
 npm run dev
