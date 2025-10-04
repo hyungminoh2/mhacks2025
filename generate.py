@@ -25,7 +25,7 @@ parser.add_argument(
 )
 
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY_DOOHEE"))
 
 # Re-add StdioServerParameters, setting args for stdio
 server_params = StdioServerParameters(

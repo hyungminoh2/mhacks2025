@@ -40,4 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-config.env
+# idk what this is was created by Hawon
+config.envcrypto_update.html

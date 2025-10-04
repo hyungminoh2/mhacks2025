@@ -1,0 +1,200 @@
+<html>
+<head>
+    <title>Cryptocurrency Market Update</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f0f3f6;
+            font-weight: bold;
+            color: #555;
+        }
+        .positive-change {
+            color: #1A936F;
+        }
+        .negative-change {
+            color: #E63946;
+        }
+        .chart-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        #priceChart {
+            width: 100%;
+            max-width: 760px;
+            height: 400px;
+            margin: auto;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <p>Hi Valued Investor,</p>
+
+        <p><strong>TL;DR:</strong> The market shows a slightly bearish trend today, with JUP experiencing a minor decline over the last 24 hours.</p>
+
+        <h2>Current Cryptocurrency Snapshot</h2>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <tr>
+                <th>Coin</th>
+                <th>Price</th>
+                <th>High (24h)</th>
+                <th>Low (24h)</th>
+                <th>24h Change</th>
+                <th>Trend</th>
+            </tr>
+            <tr>
+                <td><strong>JUP</strong></td>
+                <td>$0.43</td>
+                <td>$0.44</td>
+                <td>$0.42</td>
+                <td class="negative-change">-2.59%</td>
+                <td>Bearish</td>
+            </tr>
+        </table>
+
+        <p>Overall, the cryptocurrency market generally exhibits a mixed sentiment today, with some assets showing minor price adjustments.</p>
+
+        <div class="chart-section">
+            <h2 style="text-align: center;">JUP Daily Price History</h2>
+            <div id="priceChart"></div>
+        </div>
+
+        <script>
+            const priceData = {"data":[{"time":1757808000,"open":"0.547307728650985408","high":"0.567343049004260672","low":"0.521613181196123456","close":"0.536093587082389504","volume":"11653205.402834686062046604","volumeUsd":"6247208.685413528632171138478176280928444416","count":74371},{"time":1757894400,"open":"0.535979520125805632","high":"0.546493449223418496","low":"0.489927064151459648","close":"0.508462892665130432","volume":"22085738.778426157007281474","volumeUsd":"11229778.625925007975102145418415761947216768","count":72117},{"time":1757980800,"open":"0.508310420725766848","high":"0.525423205752898688","low":"0.494227780755658624","close":"0.517297998548010368","volume":"10205974.679810380053117564","volumeUsd":"5279530.275097580561178418058965687794903552","count":55888},{"time":1758067200,"open":"0.517295558317399680","high":"0.551997952063445696","low":"0.498486341568130432","close":"0.543649158797369088","volume":"15825087.329205791961233278","volumeUsd":"8603295.414417633059656818326726234234110464","count":76457},{"time":1758153600,"open":"0.544033443549219776","high":"0.578586763922235136","low":"0.531707552079128448","close":"0.558370653198916672","volume":"16518362.204539010978728602","volumeUsd":"9223368.693924744760784341966577262301052544","count":83814},{"time":1758240000,"open":"0.558354395510487616","high":"0.564879616917255424","low":"0.519083969465648960","close":"0.525088567641933120","volume":"9692584.998391474027753404","volumeUsd":"5089465.573553067731133387039766777220340480","count":56706},{"time":1758326400,"open":"0.525301511326983680","high":"0.536789126008273216","low":"0.513410233273368896","close":"0.527937323236990400","volume":"8010839.784550434960266810","volumeUsd":"4229221.312735945516285392438557245408624000","count":44121},{"time":1758412800,"open":"0.527853541709256384","high":"0.541987961974730880","low":"0.515929495445591936","close":"0.520068993339615744","volume":"11788980.084553107998087618","volumeUsd":"6131083.005074312974002360099311550964257792","count":55312},{"time":1758499200,"open":"0.519912584880433664","high":"0.524655001239049408","low":"0.457908410984990656","close":"0.473471995000000064","volume":"12702502.526344456009425642","volumeUsd":"6014279.212640850456932659207940974603241088","count":67752},{"time":1758585600,"open":"0.473197140782117568","high":"0.489085656560188672","low":"0.453118324190372864","close":"0.463018419756948544","volume":"15735122.387464067950449092","volumeUsd":"7285651.502525796142578239005235052335522048","count":61815},{"time":1758672000,"open":"0.463326104598913856","high":"0.488614629493308288","low":"0.451537220573870336","close":"0.473007059872529280","volume":"12083739.086630541954677395","volumeUsd":"5715693.897633875034523670300455765091625600","count":55762},{"time":1758758400,"open":"0.472131741066332416","high":"0.474862947566064960","low":"0.423742911811151296","close":"0.428023743985749824","volume":"14244702.803697589962784485","volumeUsd":"6097071.026002949977627451827066327638680640","count":73597},{"time":1758844800,"open":"0.428184385902996032","high":"0.450376699474232064","low":"0.421604812221704704","close":"0.445502502349784576","volume":"10411299.731984911995789123","volumeUsd":"4638260.083312919782735123841730158173966848","count":62129},{"time":1758931200,"open":"0.445525885918869952","high":"0.450207384371657536","low":"0.432304892809092608","close":"0.438526914239364800","volume":"6981593.500373013006891141","volumeUsd":"3061616.654192182974691918980460770587236800","count":37090},{"time":1759017600,"open":"0.439055075193872640","high":"0.440569400224418496","low":"0.421909309309309312","close":"0.431222796535942784","volume":"3122049.129532723006301453","volumeUsd":"1346298.756559706690537382368620638264065152","count":19942}]}
+
+            const dates = [];
+            const openPrices = [];
+            const highPrices = [];
+            const lowPrices = [];
+            const closePrices = [];
+
+            priceData.data.forEach(item => {
+                const date = new Date(item.time * 1000);
+                dates.push(date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }));
+                openPrices.push(parseFloat(item.open));
+                highPrices.push(parseFloat(item.high));
+                lowPrices.push(parseFloat(item.low));
+                closePrices.push(parseFloat(item.close));
+            });
+
+            const trace = {
+                x: dates,
+                open: openPrices,
+                high: highPrices,
+                low: lowPrices,
+                close: closePrices,
+                type: 'candlestick',
+                name: 'Price',
+                increasing: {line: {color: '#1A936F'}},
+                decreasing: {line: {color: '#E63946'}}
+            };
+
+            const layout = {
+                title: {
+                    text: 'Daily Price History',
+                    font: {
+                        size: 20,
+                        color: '#333'
+                    }
+                },
+                xaxis: {
+                    title: 'Date',
+                    type: 'category',
+                    tickangle: -45,
+                    rangeslider: {
+                        visible: false
+                    },
+                    rangeselector: {
+                        buttons: [
+                            {
+                                count: 7,
+                                label: '1w',
+                                step: 'day',
+                                stepmode: 'backward'
+                            },
+                            {
+                                count: 1,
+                                label: '1m',
+                                step: 'month',
+                                stepmode: 'backward'
+                            },
+                            {step: 'all'}
+                        ]
+                    }
+                },
+                yaxis: {
+                    title: 'Price',
+                    autorange: true,
+                    type: 'linear'
+                },
+                plot_bgcolor: '#fdfdfd',
+                paper_bgcolor: '#fff',
+                margin: {
+                    l: 50,
+                    r: 50,
+                    b: 100,
+                    t: 80,
+                    pad: 4
+                },
+                hovermode: 'x unified'
+            };
+
+            Plotly.newPlot('priceChart', [trace], layout, {responsive: true});
+        </script>
+
+        <p class="footer">Best regards,<br>Solvend, 2025</p>
+    </div>
+</body>
+</html>
