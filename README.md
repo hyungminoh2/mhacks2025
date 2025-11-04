@@ -26,7 +26,7 @@ pnpm dev
 bun dev
 
 Run Flask server
-python app2.py
+python3 app.py
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
